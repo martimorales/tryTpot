@@ -197,6 +197,8 @@ alias ls='ls \$LS_OPTIONS'
 alias ll='ls \$LS_OPTIONS -l'
 alias l='ls \$LS_OPTIONS -lA'"
 
+# To decide if GreedyBear will also be installed
+GREEDYBEAR=1
 
 #################
 # II. Functions #
@@ -539,6 +541,23 @@ if [ "$myTPOT_DEPLOYMENT_TYPE" == "iso" ] || [ "$myTPOT_DEPLOYMENT_TYPE" == "use
     "MINI" "Same as Standard with focus on qHoneypots" \
     "SENSOR" "Just Honeypots & NSM" 3>&1 1>&2 2>&3 3>&-)
 fi
+
+# Let's ask the user if GreedyBear should be installed as well
+if [ "$myTPOT_DEPLOYMENT_TYPE" == "iso" ] || [ "$myTPOT_DEPLOYMENT_TYPE" == "user" ] && [ "$myCONF_TPOT_FLAVOR" != "HIVE_SENSOR" ];
+  then
+    dialog --keep-window --backtitle "$myBACKTITLE" --title "[ GreedyBear Installation ]" --defaultno \
+    	--yesno "Do you also want to install GreedyBear afterwards?\n(See: https://github.com/intelowlproject/GreedyBear)\n!This might require additional ressources." 7 60
+    GREEDYBEAR=$?
+fi
+
+# Let's ask the user for Greedybear flavor
+if [ "$GREEDYBEAR" -eq 0 ]; then
+    myGREEDYBEAR_FLAVOR=$(dialog --keep-window --no-cancel --backtitle "$myBACKTITLE" --title "[ Choose Your Greedybear ]" --menu \
+    "\n" 17 70 1 \
+    "http" "Plain HTTP (default)" \
+    "https" "HTTPS enabled" \
+    "local" "Local Development" 3>&1 1>&2 2>&3 3>&-)
+fi 
 
 # Let's ask for a secure tsec password if installation type is iso
 if [ "$myTPOT_DEPLOYMENT_TYPE" == "iso" ];
@@ -911,6 +930,12 @@ rm -rf /etc/motd.d/cockpit && \
 rm -rf /etc/issue.net && \
 rm -rf /etc/motd && \
 systemctl restart console-setup.service
+
+# Install Greedybear, if choosen
+if [ "$GREEDYBEAR" -eq 0 ]; then
+  cd /opt/tpot/iso/installer
+  ./install_greedybear.sh --type=$myGREEDYBEAR_FLAVOR
+fi 
 
 if [ "$myTPOT_DEPLOYMENT_TYPE" == "auto" ];
   then
