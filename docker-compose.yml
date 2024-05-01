@@ -216,28 +216,28 @@ services:
 #      - ${TPOT_DATA_PATH}/conpot/log:/var/log/conpot
 
 # Cowrie service
-#   cowrie:
-#     container_name: cowrie
-#     restart: always
-#     depends_on:
-#       tpotinit:
-#         condition: service_healthy
-#     tmpfs:
-#       - /tmp/cowrie:uid=2000,gid=2000
-#       - /tmp/cowrie/data:uid=2000,gid=2000
-#     networks:
-#       - cowrie_local
-#     ports:
-#       - "22:22"
-#       - "23:23"
-#     image: ${TPOT_REPO}/cowrie:${TPOT_VERSION} 
-#     pull_policy: ${TPOT_PULL_POLICY}
-#     read_only: true
-#     volumes:
-#       - ${TPOT_DATA_PATH}/cowrie/downloads:/home/cowrie/cowrie/dl
-#       - ${TPOT_DATA_PATH}/cowrie/keys:/home/cowrie/cowrie/etc
-#       - ${TPOT_DATA_PATH}/cowrie/log:/home/cowrie/cowrie/log
-#       - ${TPOT_DATA_PATH}/cowrie/log/tty:/home/cowrie/cowrie/log/tty
+  cowrie:
+    container_name: cowrie
+    restart: always
+    depends_on:
+      tpotinit:
+        condition: service_healthy
+    tmpfs:
+      - /tmp/cowrie:uid=2000,gid=2000
+      - /tmp/cowrie/data:uid=2000,gid=2000
+    networks:
+      - cowrie_local
+    ports:
+      - "22:22"
+      - "23:23"
+    image: ${TPOT_REPO}/cowrie:${TPOT_VERSION} 
+    pull_policy: ${TPOT_PULL_POLICY}
+    read_only: true
+    volumes:
+      - ${TPOT_DATA_PATH}/cowrie/downloads:/home/cowrie/cowrie/dl
+      - ${TPOT_DATA_PATH}/cowrie/keys:/home/cowrie/cowrie/etc
+      - ${TPOT_DATA_PATH}/cowrie/log:/home/cowrie/cowrie/log
+      - ${TPOT_DATA_PATH}/cowrie/log/tty:/home/cowrie/cowrie/log/tty
 
 # Ddospot service
 #   ddospot:
